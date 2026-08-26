@@ -7,7 +7,8 @@ public class Main {
     public static void main(String[] args) {
 
         ArrayList<String> words = new ArrayList<>();
-        Set<Character> theHiddenWord = new HashSet<>();
+        Set<Character> necessaryLetters = new HashSet<>();
+        Set<Character> unNecessaryLetters = new HashSet<>();
         Scanner input = new Scanner(System.in);
         Random random = new Random();
         StringBuilder stringBuilder = new StringBuilder();
@@ -68,23 +69,6 @@ public class Main {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         // Чтение файла и добавление его в список слов, из которого мы будем потом вытаскивать рандомно слова
         try (BufferedReader br = new BufferedReader(new FileReader("words.txt"))) {
             String line;
@@ -117,7 +101,7 @@ public class Main {
 
                 // Делаем маску слова
                 for (Character character : randomItem.toCharArray()) {
-                    if  (theHiddenWord.contains(character)) {
+                    if  (necessaryLetters.contains(character)) {
                         stringBuilder.append(character);
                     } else {
                         stringBuilder.append("*");
@@ -149,24 +133,34 @@ public class Main {
                     System.out.print("Введите букву: ");
                     String letter = input.nextLine();
 
-                    // Если буква, которую ввел пользователь, уже была введена (т.е есть в SET) -> пишем, что эту букву уже вводили
-                    if (theHiddenWord.contains(letter.charAt(0))) {
+                    // Проверка уже введенной буквы (правильной)
+                    // (1) Если буква, которую ввел пользователь, уже была введена и она есть в necessaryLetters -> пишем, что эту букву уже вводили
+                    if (necessaryLetters.contains(letter.charAt(0))) {
                         System.out.println("Вы уже вводили эту букву");
                         System.out.println("---------------------------");
                     }
 
-                    // Если буква, которую ввел пользователь, есть в загаданном слове (+ И она не была введена) -> добавляем в SET ()
+                    // (2) Если буква, которую ввел пользователь, есть в загаданном слове и ее нет в necessaryLetter -> добавляем в HashSet
                     else if (randomItem.contains(letter)) {
-                        theHiddenWord.add(letter.charAt(0));
+                        necessaryLetters.add(letter.charAt(0));
                     }
 
-                    // Если пользователь ввел букву, которой нет в загаданном слое -> вычитаем балл
-                    else {
+
+
+                    // Проверка уже введенной буквы (неправильной)
+                    // (1) Если буква, которую ввел пользователь, уже была введена и она есть в unNecessaryLetters -> пишем, что эту букву уже вводили
+                    else if (unNecessaryLetters.contains(letter.charAt(0))) {
+                        System.out.println("Вы уже вводили эту букву");
+                        System.out.println("---------------------------");
+                    }
+                    // (2) Если буквы, которую ввел пользователь, нет в загаданном слове и ее нет в unNecessaryLetters -> вычитаем балл + добавляем в HashSet
+                    else if (!randomItem.contains(letter)) {
 
                         System.out.println("---------------------------");
                         System.out.println("| Такой буквы нет в слове |");
                         System.out.println("---------------------------");
                         mistakes -= 1;
+                        unNecessaryLetters.add(letter.charAt(0));
 
                         // Пишем сколько ошибок у пользователя осталось
                         System.out.println("Осталось ошибок: " + mistakes);
