@@ -7,13 +7,12 @@ public class Main {
     public static void main(String[] args) {
 
         ArrayList<String> words = new ArrayList<>();
-        Set<Character> necessaryLetters = new HashSet<>();
-        Set<Character> unNecessaryLetters = new HashSet<>();
+
         Scanner input = new Scanner(System.in);
         Random random = new Random();
         StringBuilder stringBuilder = new StringBuilder();
-        String result = "*";
-        int mistakes = 5;
+
+
         final String[][] HANGMAN_STAGES = {
                 {
                         " ___   ",
@@ -79,14 +78,26 @@ public class Main {
             e.printStackTrace();
         }
 
-        // Достаем рандомное слово
-        int randomIndex = random.nextInt(words.size());
-        String randomItem = words.get(randomIndex);
+
+
 
 
         // Спрашиваем у пользователя будет ли он играть
         while (true) {
+
+            Set<Character> necessaryLetters = new HashSet<>();
+            Set<Character> unNecessaryLetters = new HashSet<>();
+
+            // Достаем рандомное слово
+            int randomIndex = random.nextInt(words.size());
+            String randomItem = words.get(randomIndex);
+
+            String result = "*";
+            int mistakes = 5;
+
             System.out.println("[N]ew game or [E]xit ?");
+
+
             String userAnswer = input.nextLine();
 
             // Если пользователь хочет играть
