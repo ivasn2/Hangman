@@ -90,15 +90,29 @@ public class Main {
 
             // Достаем рандомное слово
             int randomIndex = random.nextInt(words.size());
-            String randomItem = words.get(randomIndex);
+            String randomItem = words.get(randomIndex).toLowerCase();
 
             String result = "*";
             int mistakes = 5;
 
             System.out.println("[N]ew game or [E]xit ?");
-
-
             String userAnswer = input.nextLine();
+
+            //Обработка ввода пользователя
+            while (true) {
+                // Проверка пустая ли строка
+                if (userAnswer.isEmpty()) {
+                    System.out.println("Введите n или e");
+                    userAnswer = input.nextLine();
+                }
+                // Проверка, что длина строки == 1 && или это вообще буква
+                else if ((userAnswer.length() != 1) || (!Character.isLetter(userAnswer.charAt(0)))) {
+                    System.out.println("Введите n или e");
+                    userAnswer = input.nextLine();
+                } else {
+                    break;
+                }
+            }
 
             // Если пользователь хочет играть
             if (userAnswer.equalsIgnoreCase("N")) {
@@ -144,7 +158,30 @@ public class Main {
                     // Если маска слова содержт букву -> просим у пользователя чтобы он ввел букву
                     else {
                         System.out.print("Введите букву: ");
-                        String letter = input.nextLine();
+                        String letter = input.nextLine().toLowerCase();
+
+                        //Обработка ввода пользователя
+                        while (true) {
+                            // Проверка пустая ли строка
+                            if (letter.isEmpty()) {
+                                System.out.println("Введите букву");
+                                letter = input.nextLine().toLowerCase();
+                            }
+                            // Проверка, что длина строки == 1 && или это вообще буква
+                            else if ((letter.length() != 1) || (!Character.isLetter(letter.charAt(0)))) {
+                                System.out.println("Введите букву");
+                                letter = input.nextLine().toLowerCase();
+                            }
+                            // Проверка, что введенная буква является русской
+                            else if (!(letter.matches("[А-Яа-яЁё]")))
+                            {
+                                System.out.println("Введите русскую букву");
+                                letter = input.nextLine().toLowerCase();
+                            }
+                            else {
+                                break;
+                            }
+                        }
 
                         // Проверка уже введенной буквы (правильной)
                         // (1) Если буква, которую ввел пользователь, уже была введена и она есть в necessaryLetters -> пишем, что эту букву уже вводили
