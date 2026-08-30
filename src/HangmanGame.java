@@ -14,8 +14,8 @@ public class HangmanGame {
         return "";
     }
 
-    public void processLetter(int letter) {
-        return;
+    public String processLetter(String letter) {
+        return "";
     }
 
     public String drawHangman() {
