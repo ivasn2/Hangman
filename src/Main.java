@@ -10,63 +10,6 @@ public class Main {
 
         Scanner input = new Scanner(System.in);
         Random random = new Random();
-        StringBuilder stringBuilder = new StringBuilder();
-
-
-        final String[][] HANGMAN_STAGES = {
-                {
-                        " ___   ",
-                        "|   |   ",
-                        "|   O   ",
-                        "|  (|)   ",
-                        "|  //    ",
-                        "======== ",
-                },
-                {
-                        " ____   ",
-                        "|    |   ",
-                        "|    O   ",
-                        "|   (|)    ",
-                        "|       ",
-                        "======== ",
-                },
-                {
-                        " ____   ",
-                        "|    |   ",
-                        "|    O   ",
-                        "|    |   ",
-                        "|       ",
-                        "======== ",
-                },
-                {
-                        " ___   ",
-                        "|   |   ",
-                        "|   O   ",
-                        "|      ",
-                        "|       ",
-                        "======== ",
-                },
-                {
-                        " ___   ",
-                        "|      ",
-                        "|      ",
-                        "|       ",
-                        "|       ",
-                        "======== ",
-                },
-                {
-                        "|      ",
-                        "|      ",
-                        "|       ",
-                        "|       ",
-                        " ======= ",
-                },
-
-        };
-
-
-
-
 
         // Чтение файла и добавление его в список слов, из которого мы будем потом вытаскивать рандомно слова
         try (BufferedReader br = new BufferedReader(new FileReader("words.txt"))) {
@@ -78,22 +21,13 @@ public class Main {
             e.printStackTrace();
         }
 
-
-
-
-
         // Спрашиваем у пользователя будет ли он играть
         while (true) {
-
-            Set<Character> necessaryLetters = new HashSet<>();
-            Set<Character> unNecessaryLetters = new HashSet<>();
 
             // Достаем рандомное слово
             int randomIndex = random.nextInt(words.size());
             String randomItem = words.get(randomIndex).toLowerCase();
-
-            String result = "*";
-            int mistakes = 5;
+            HangmanGame game = new HangmanGame(randomItem);
 
             System.out.println("[N]ew game or [E]xit ?");
             String userAnswer = input.nextLine();
@@ -121,39 +55,9 @@ public class Main {
                 System.out.println("--------------");
 
                 // Цикл выполняется до тех пор пока маска слова содержит *
-                while (result.contains("*")) {
-
-                    // Это чтобы не добавлялась *
-                    stringBuilder.setLength(0);
-
-                    // Делаем маску слова
-                    for (Character character : randomItem.toCharArray()) {
-                        if  (necessaryLetters.contains(character)) {
-                            stringBuilder.append(character);
-                        } else {
-                            stringBuilder.append("*");
-                        }
-                    }
-
-                    // Печатаем маску слова
-                    result = stringBuilder.toString();
-                    System.out.println("Слово: " + result);
+                while (!game.isWon() && !game.isLost()) {
 
 
-                    // Тут же печатаем наш рисунок, который зависит от количества ошибок
-                    for (String line : HANGMAN_STAGES[mistakes]) {
-                        System.out.println(line);
-                    }
-
-                    // Если маска слова НЕ содежит * то мы заканчиваем игру -> пользователь выиграл
-                    if (!result.contains("*")) {
-                        break;
-                    }
-
-                    // Если у пользователя не осталось доступных ошибок -> прерываем цикл (заканчиваем игру)
-                    if (mistakes == 0) {
-                        break;
-                    }
 
                     // Если маска слова содержт букву -> просим у пользователя чтобы он ввел букву
                     else {
@@ -183,47 +87,11 @@ public class Main {
                             }
                         }
 
-                        // Проверка уже введенной буквы (правильной)
-                        // (1) Если буква, которую ввел пользователь, уже была введена и она есть в necessaryLetters -> пишем, что эту букву уже вводили
-                        if (necessaryLetters.contains(letter.charAt(0))) {
-                            System.out.println("Вы уже вводили эту букву");
-                            System.out.println("---------------------------");
-                        }
 
-                        // (2) Если буква, которую ввел пользователь, есть в загаданном слове и ее нет в necessaryLetter -> добавляем в HashSet
-                        else if (randomItem.contains(letter)) {
-                            necessaryLetters.add(letter.charAt(0));
-                        }
-
-
-
-                        // Проверка уже введенной буквы (неправильной)
-                        // (1) Если буква, которую ввел пользователь, уже была введена и она есть в unNecessaryLetters -> пишем, что эту букву уже вводили
-                        else if (unNecessaryLetters.contains(letter.charAt(0))) {
-                            System.out.println("Вы уже вводили эту букву");
-                            System.out.println("---------------------------");
-                        }
-                        // (2) Если буквы, которую ввел пользователь, нет в загаданном слове и ее нет в unNecessaryLetters -> вычитаем балл + добавляем в HashSet
-                        else if (!randomItem.contains(letter)) {
-
-                            System.out.println("---------------------------");
-                            System.out.println("| Такой буквы нет в слове |");
-                            System.out.println("---------------------------");
-                            mistakes -= 1;
-                            unNecessaryLetters.add(letter.charAt(0));
-
-                            // Пишем сколько ошибок у пользователя осталось
-                            System.out.println("Осталось ошибок: " + mistakes);
-                        }
-                    }
                 }
 
                 // Если слово НЕ содержит "*" -> победа
-                if (!result.contains("*")) {
-                    System.out.println("-----------------------------------");
-                    System.out.println("| Вы отгадали слово! Вы выиграли! |");
-                    System.out.println("-----------------------------------");
-                }
+
 
                 // Если слово содержит "*"(т.е пользователь не отгадал слово) -> поражение
                 else {
