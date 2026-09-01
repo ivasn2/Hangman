@@ -61,6 +61,7 @@ public class HangmanGame {
 
     };
 
+    // Конструктор, инициализируем поля
     public HangmanGame(String word) {
         this.stringBuilder = new StringBuilder();
 
@@ -73,6 +74,7 @@ public class HangmanGame {
         this.randomItem = word;
     }
 
+    // Строим маску и выводим ее
     public String buildMask() {
         stringBuilder.setLength(0);
         for (Character character : randomItem.toCharArray()) {
@@ -86,6 +88,7 @@ public class HangmanGame {
         return result;
     }
 
+    // Проверка на дурака - буква слова, введенная пользователем
     public String processLetter(String letter) {
         if (necessaryLetters.contains(letter.charAt(0))) {
             return "Вы уже вводили эту букву\n---------------------------";
@@ -113,15 +116,17 @@ public class HangmanGame {
         return "";
     }
 
-
+    // Отрисовка виселицы
     public String drawHangman() {
         return String.join("\n", HANGMAN_STAGES[mistakes]);
     }
 
+    // Метод, который определяет выиграл пользователь или нет
     public boolean isWon() {
         return !result.contains("*");
     }
 
+    // Метод, который определяет проиграл пользователь или нет
     public boolean isLost() {
         return mistakes == 0;
     }
