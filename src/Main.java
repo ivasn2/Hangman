@@ -22,11 +22,12 @@ public class Main {
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
         Random random = new Random();
+        ArrayList<String> words = wordLoader("words.txt");
 
         while (true) {
 
-            int randomIndex = random.nextInt(wordLoader("words.txt").size());
-            String randomItem = wordLoader("words.txt").get(randomIndex).toLowerCase();
+            int randomIndex = random.nextInt(words.size());
+            String randomItem = words.get(randomIndex).toLowerCase();
             HangmanGame game = new HangmanGame(randomItem);
 
             System.out.println("[N]ew game or [E]xit ?");
