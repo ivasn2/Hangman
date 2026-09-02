@@ -4,14 +4,11 @@ import java.io.IOException;
 import java.util.*;
 
 public class Main {
-    public static void main(String[] args) {
 
+    // Чтение файла и добавление его в список слов - метод
+    public static ArrayList<String> wordLoader(String fileName) {
         ArrayList<String> words = new ArrayList<>();
-        Scanner input = new Scanner(System.in);
-        Random random = new Random();
-
-        // Чтение файла и добавление его в список слов
-        try (BufferedReader br = new BufferedReader(new FileReader("words.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             String line;
             while ((line = br.readLine()) != null) {
                 words.add(line);
@@ -19,11 +16,17 @@ public class Main {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return words;
+    }
+
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        Random random = new Random();
 
         while (true) {
 
-            int randomIndex = random.nextInt(words.size());
-            String randomItem = words.get(randomIndex).toLowerCase();
+            int randomIndex = random.nextInt(wordLoader("words.txt").size());
+            String randomItem = wordLoader("words.txt").get(randomIndex).toLowerCase();
             HangmanGame game = new HangmanGame(randomItem);
 
             System.out.println("[N]ew game or [E]xit ?");
@@ -90,4 +93,6 @@ public class Main {
             }
         }
     }
+
+
 }
