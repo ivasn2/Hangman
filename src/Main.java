@@ -74,9 +74,11 @@ public class Main {
                     }
 
                     System.out.println(game.processLetter(letter));
+                    game.buildMask();
                 }
 
                 if (game.isWon()) {
+                    System.out.println("Слово: " + game.buildMask());
                     System.out.println("-----------------------------------");
                     System.out.println("| Вы отгадали слово! Вы выиграли! |");
                     System.out.println("-----------------------------------");
