@@ -61,7 +61,6 @@ public class HangmanGame {
 
     };
 
-    // Конструктор, инициализируем поля
     public HangmanGame(String word) {
         this.stringBuilder = new StringBuilder();
 

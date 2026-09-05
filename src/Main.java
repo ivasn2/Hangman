@@ -5,6 +5,26 @@ import java.util.*;
 
 public class Main {
 
+    public static String validateInput(Scanner input, String errorMessage, boolean requireRussian) {
+        String value = input.nextLine().toLowerCase();
+        while (true) {
+            if (value.isEmpty()) {
+                System.out.println(errorMessage);
+                value = input.nextLine().toLowerCase();
+            } else if (value.length() != 1 || !Character.isLetter(value.charAt(0))) {
+                System.out.println(errorMessage);
+                value = input.nextLine().toLowerCase();
+            } else if (requireRussian && !value.matches("[А-Яа-яЁё]")) {
+                System.out.println("Введите русскую букву");
+                value = input.nextLine().toLowerCase();
+            } else {
+                break;
+            }
+        }
+        return value;
+    }
+
+
     // Чтение файла и добавление его в список слов - метод
     public static ArrayList<String> wordLoader(String fileName) {
         ArrayList<String> words = new ArrayList<>();
@@ -31,19 +51,7 @@ public class Main {
             HangmanGame game = new HangmanGame(randomItem);
 
             System.out.println("[N]ew game or [E]xit ?");
-            String userAnswer = input.nextLine();
-
-            while (true) {
-                if (userAnswer.isEmpty()) {
-                    System.out.println("Введите n или e");
-                    userAnswer = input.nextLine();
-                } else if ((userAnswer.length() != 1) || (!Character.isLetter(userAnswer.charAt(0)))) {
-                    System.out.println("Введите n или e");
-                    userAnswer = input.nextLine();
-                } else {
-                    break;
-                }
-            }
+            String userAnswer = validateInput(input, "Введите n или e", false);
 
             if (userAnswer.equalsIgnoreCase("N")) {
                 System.out.println("--------------");
@@ -56,22 +64,7 @@ public class Main {
                     System.out.println(game.drawHangman());
 
                     System.out.print("Введите букву: ");
-                    String letter = input.nextLine().toLowerCase();
-
-                    while (true) {
-                        if (letter.isEmpty()) {
-                            System.out.println("Введите букву");
-                            letter = input.nextLine().toLowerCase();
-                        } else if ((letter.length() != 1) || (!Character.isLetter(letter.charAt(0)))) {
-                            System.out.println("Введите букву");
-                            letter = input.nextLine().toLowerCase();
-                        } else if (!(letter.matches("[А-Яа-яЁё]"))) {
-                            System.out.println("Введите русскую букву");
-                            letter = input.nextLine().toLowerCase();
-                        } else {
-                            break;
-                        }
-                    }
+                    String letter = validateInput(input, "Введите букву", true);
 
                     System.out.println(game.processLetter(letter));
                     game.buildMask();
