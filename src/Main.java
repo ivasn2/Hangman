@@ -1,48 +1,11 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.*;
-
 public class Main {
-
-    public static String validateInput(Scanner input, String errorMessage, boolean requireRussian) {
-        String value = input.nextLine().toLowerCase();
-        while (true) {
-            if (value.isEmpty()) {
-                System.out.println(errorMessage);
-                value = input.nextLine().toLowerCase();
-            } else if (value.length() != 1 || !Character.isLetter(value.charAt(0))) {
-                System.out.println(errorMessage);
-                value = input.nextLine().toLowerCase();
-            } else if (requireRussian && !value.matches("[А-Яа-яЁё]")) {
-                System.out.println("Введите русскую букву");
-                value = input.nextLine().toLowerCase();
-            } else {
-                break;
-            }
-        }
-        return value;
-    }
-
-
-    // Чтение файла и добавление его в список слов - метод
-    public static ArrayList<String> wordLoader(String fileName) {
-        ArrayList<String> words = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                words.add(line);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return words;
-    }
 
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
         Random random = new Random();
-        ArrayList<String> words = wordLoader("words.txt");
+        ArrayList<String> words = WordLoader.wordLoader("words.txt");
+        HangmanRenderer hangmanRenderer = new HangmanRenderer();
 
         while (true) {
 
@@ -51,7 +14,7 @@ public class Main {
             HangmanGame game = new HangmanGame(randomItem);
 
             System.out.println("[N]ew game or [E]xit ?");
-            String userAnswer = validateInput(input, "Введите n или e", false);
+            String userAnswer = InputValidator.validateInput(input, "Введите n или e", false);
 
             if (userAnswer.equalsIgnoreCase("N")) {
                 System.out.println("--------------");
@@ -61,10 +24,10 @@ public class Main {
                 while (!game.isWon() && !game.isLost()) {
 
                     System.out.println("Слово: " + game.buildMask());
-                    System.out.println(game.drawHangman());
+                    System.out.println(hangmanRenderer.drawHangman(game.getMistakes()));
 
                     System.out.print("Введите букву: ");
-                    String letter = validateInput(input, "Введите букву", true);
+                    String letter = InputValidator.validateInput(input, "Введите букву", true);
 
                     System.out.println(game.processLetter(letter));
                     game.buildMask();
@@ -76,7 +39,7 @@ public class Main {
                     System.out.println("| Вы отгадали слово! Вы выиграли! |");
                     System.out.println("-----------------------------------");
                 } else {
-                    System.out.println(game.drawHangman());
+                    System.out.println(hangmanRenderer.drawHangman(game.getMistakes()));
                     System.out.println("------------------------------------");
                     System.out.println("| Вы проиграли! Попробуйте еще раз |");
                     System.out.println("------------------------------------");
