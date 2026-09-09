@@ -1,5 +1,5 @@
 public class HangmanRenderer {
-    static final String[][] HANGMAN_STAGES = {
+    private static final String[][] HANGMAN_STAGES = {
             {
                     " ___   ",
                     "|   |   ",
@@ -50,7 +50,7 @@ public class HangmanRenderer {
 
     };
 
-    public String drawHangman(int mistakes) {
+    public static String drawHangman(int mistakes) {
         return String.join("\n", HANGMAN_STAGES[mistakes]);
     }
 }
